@@ -2,25 +2,27 @@ import cv2
 import os
 import imutils
 
-class ImageCapture:
+from constants import *
 
-    IMAGES_PATH = 'images'
-    CAMERA = 0
+class ImageCapture:
 
     def __init__(self, person_name):
         self.person_name = person_name
-        self.person_path = '{}/{}'.format(self.IMAGES_PATH, self.person_name)
+        self.person_path = '{}/{}'.format(IMAGES_PATH, self.person_name)
 
         self.build_dirs()
 
         try:
-            self.cap = cv2.VideoCapture(self.CAMERA, cv2.CAP_DSHOW)  # 0, 1 son los índices de la cámara
+            self.cap = cv2.VideoCapture(NUM_CAMARA, cv2.CAP_DSHOW)  # 0, 1 son los índices de la cámara
         except Exception as error:
             print('Camera Error: {}'.format(error))
 
         self.faceClassif = cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
 
     def build_dirs(self):
+        """
+        Directorios
+        """
         if not os.path.exists(self.person_path):
             os.makedirs(self.person_path)
             print('Created Folder: ',self.person_path)
@@ -56,14 +58,3 @@ class ImageCapture:
         except Exception as e:
             print('Error inesperado en la captura:', e)
 
-def main():
-    person_name = input("Ingrese su nombre: ")
-    print("Bienvenido {} al registro de imagenes. Vamos a iniciar la digitalización de su rostro,"\
-          "para terminar pulse ESC o espere hasta que hayamos terminado.".format(person_name))
-    print("Pulse ENTER para continuar...")
-    input()
-    capturer = ImageCapture(person_name)
-    capturer.capture()
-
-if __name__ == "__main__":
-    main()
